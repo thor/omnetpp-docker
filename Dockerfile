@@ -24,9 +24,12 @@ FROM base as builder
 ARG VERSION
 WORKDIR /root
 RUN wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-$VERSION/omnetpp-$VERSION-src-core.tgz \
-         --referer=https://omnetpp.org/ -O omnetpp-src-core.tgz --progress=dot:giga && \
-         tar xf omnetpp-src-core.tgz && rm omnetpp-src-core.tgz
-RUN mv omnetpp-$VERSION omnetpp
+         --referer=https://omnetpp.org/ \
+		 -O omnetpp-src-core.tgz \
+		 --progress=dot:giga && \
+	 tar xf omnetpp-src-core.tgz && \
+	 rm omnetpp-src-core.tgz && \
+	 mv omnetpp-$VERSION omnetpp
 WORKDIR /root/omnetpp
 ENV PATH /root/omnetpp/bin:$PATH
 # remove unused files and build
@@ -45,7 +48,8 @@ RUN chmod 775 /root/ && \
     mkdir -p /root/models && \
     chmod 775 /root/models
 WORKDIR /root/models
-RUN echo "PS1='omnetpp-$VERSION:\w\$ '" >> /root/.bashrc && chmod +x /root/.bashrc && \
+RUN echo "PS1='omnetpp-$VERSION:\w\$ '" >> /root/.bashrc && \
+	chmod +x /root/.bashrc && \
     touch /root/.hushlogin
 ENV HOME=/root/
 CMD /bin/bash --init-file /root/.bashrc
