@@ -6,7 +6,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && \
     apt install -y --no-install-recommends cmake git wget curl make ca-certificates bison flex clang perl python3 libxml2-dev cppcheck && \
     apt clean && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 && \
     rm -rf /var/lib/apt/lists/*
 
 LABEL maintainer="Thor K. Høgås <thor@roht.no>"
