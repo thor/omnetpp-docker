@@ -1,4 +1,5 @@
-ARG VERSION=6.0pre7
+ARG VERSION=5.6.1
+
 FROM ubuntu:20.04 as base
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && \
