@@ -1,4 +1,10 @@
-FROM omnetpp/omnetpp-base:u18.04 as base
+FROM ubuntu:18.04 as base
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends cmake git wget curl make ca-certificates bison flex clang perl python3 libxml2-dev && \
+    apt-get clean && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 && \
+    rm -rf /var/lib/apt/lists/*
+
 # Modified by Thor K. Høgås to utilise 6.0pre6
 MAINTAINER Rudolf Hornig <rudi@omnetpp.org>
 
