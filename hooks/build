@@ -32,10 +32,10 @@ function tags {
 
 for version in "${VERSIONS[@]}"; do
   unset TAG_PARAMETERS
-  TAG_PARAMETERS=$(tags "$version")
+  read -ra TAG_PARAMETERS < <(tags "$version")
   docker image build \
     --build-arg "VERSION=$version" \
-    "${TAG_PARAMETERS[@]}"
+    "${TAG_PARAMETERS[@]}" \
     .
   true
 done
