@@ -20,12 +20,12 @@ function tags {
   VERSION_PARTS=$((${#VERSION_PARTS} + 1))
   PARAMETERS=()
   for ((i=1;i<=VERSION_PARTS;i++)); do
-    PARAMETERS+=("--tag $(echo "$NAME:$VERSION" | cut -d. -f "1-$i")")
+    PARAMETERS+=("--tag" "$NAME:$(echo "$VERSION" | cut -d. -f "1-$i")")
   done
   if [ "$VERSION" == "$LATEST_STABLE" ]; then
-    PARAMETERS+=("--tag latest")
+    PARAMETERS+=("--tag" "latest")
   elif [ "$VERSION" == "$LATEST_PREVIEW" ]; then
-    PARAMETERS+=("--tag latest-preview")
+    PARAMETERS+=("--tag" "latest-preview")
   fi
   echo "${PARAMETERS[@]}"
 }
