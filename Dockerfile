@@ -1,8 +1,10 @@
-FROM ubuntu:18.04 as base
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends cmake git wget curl make ca-certificates bison flex clang perl python3 libxml2-dev && \
-    apt-get clean && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 && \
+ARG VERSION=6.0pre7
+FROM ubuntu:20.04 as base
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update -y && \
+    apt install -y --no-install-recommends cmake git wget curl make ca-certificates bison flex clang perl python3 libxml2-dev cppcheck && \
+    apt clean && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 && \
     rm -rf /var/lib/apt/lists/*
 
 # Modified by Thor K. Høgås to utilise 6.0pre6
@@ -10,7 +12,7 @@ MAINTAINER Rudolf Hornig <rudi@omnetpp.org>
 
 # first stage - build omnet
 FROM base as builder
-ARG VERSION=6.0pre6
+ARG VERSION
 WORKDIR /root
 RUN wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-$VERSION/omnetpp-$VERSION-src-core.tgz \
          --referer=https://omnetpp.org/ -O omnetpp-src-core.tgz --progress=dot:giga && \
@@ -25,7 +27,7 @@ RUN ./configure WITH_QTENV=no WITH_OSG=no WITH_OSGEARTH=no && \
 
 # second stage - copy only the final binaries (to get rid of the 'out' folder and reduce the image size)
 FROM base
-ARG VERSION=6.0pre6
+ARG VERSION
 ENV OPP_VER=$VERSION
 RUN mkdir -p /root/omnetpp
 WORKDIR /root/omnetpp
