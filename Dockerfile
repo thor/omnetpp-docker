@@ -4,7 +4,15 @@ FROM ubuntu:20.04 as base
 ARG VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && \
-    apt install -y --no-install-recommends cmake git wget curl make ca-certificates bison flex clang perl python3 libxml2-dev cppcheck && \
+    apt-get install -y --no-install-recommends \
+		# OMNeT++ build tools
+		make bison flex clang \
+		# OMNeT++ requirements
+		python3 perl libxml2-dev \
+		# zlib headers for < 6.X
+		zlib1g-dev \
+		# build tools & other tools in addition to OMNeT++ requirements
+		ca-certificates wget curl cmake git cppcheck graphviz doxygen && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
