@@ -29,7 +29,6 @@ RUN ./configure WITH_QTENV=no WITH_OSG=no WITH_OSGEARTH=no && \
 # second stage - copy only the final binaries (to get rid of the 'out' folder and reduce the image size)
 FROM base
 ARG VERSION
-ENV OPP_VER=$VERSION
 RUN mkdir -p /root/omnetpp
 WORKDIR /root/omnetpp
 COPY --from=builder /root/omnetpp/ .
@@ -38,7 +37,7 @@ RUN chmod 775 /root/ && \
     mkdir -p /root/models && \
     chmod 775 /root/models
 WORKDIR /root/models
-RUN echo 'PS1="omnetpp-$OPP_VER:\w\$ "' >> /root/.bashrc && chmod +x /root/.bashrc && \
+RUN echo "PS1='omnetpp-$VERSION:\w\$ '" >> /root/.bashrc && chmod +x /root/.bashrc && \
     touch /root/.hushlogin
 ENV HOME=/root/
 CMD /bin/bash --init-file /root/.bashrc
