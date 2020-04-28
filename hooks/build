@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Build hook for Docker Hub
+# Tags the builds with apt tags for each of the versions.
+# Goes through each version in order and tags them with each component of
+# their version. Thus the order matters, and you should generally not add 
+# multiple versions of the same major and minor to one build.
+
+LATEST_PREVIEW="6.0pre7"
+LATEST_STABLE="5.6.1"
+
+VERSIONS=("$LATEST_STABLE" "$LATEST_PREVIEW")
+
+NAME="${DOCKER_REPO:-roht/omnetpp}"
+
+function tags {
+  VERSION=$1
+  VERSION_PARTS="${VERSION//[^.]}"
+  VERSION_PARTS=$((${#VERSION_PARTS} + 1))
+  PARAMETERS=()
+  for ((i=1;i<=VERSION_PARTS;i++)); do
+    PARAMETERS+=("--tag $(echo "$NAME:$VERSION" | cut -d. -f "1-$i")")
+  done
+  if [ "$VERSION" == "$LATEST_STABLE" ]; then
+    PARAMETERS+=("--tag latest")
+  elif [ "$VERSION" == "$LATEST_PREVIEW" ]; then
+    PARAMETERS+=("--tag latest-preview")
+  fi
+  echo "${PARAMETERS[@]}"
+}
+
+for version in "${VERSIONS[@]}"; do
+  unset TAG_PARAMETERS
+  TAG_PARAMETERS=$(tags "$version")
+  docker image build \
+    --build-arg "VERSION=$version" \
+    "${TAG_PARAMETERS[@]}"
+    .
+  true
+done
