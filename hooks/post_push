@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build hook for Docker Hub
+# Post push hook for Docker Hub
 # Tags the builds with apt tags for each of the versions.
 # Goes through each version in order and tags them with each component of
 # their version. Thus the order matters, and you should generally not add
@@ -16,22 +16,21 @@ function tags() {
   VERSION_PARTS=$((${#VERSION_PARTS} + 1))
   PARAMETERS=()
   for ((i = 1; i <= VERSION_PARTS; i++)); do
-    PARAMETERS+=("--tag" "$NAME:$(echo "$VERSION" | cut -d. -f "1-$i")")
+    PARAMETERS+=("$(echo "$VERSION" | cut -d. -f "1-$i")")
   done
   if [ "$VERSION" == "$LATEST_STABLE" ]; then
-    PARAMETERS+=("--tag" "$NAME:latest")
+    PARAMETERS+=("latest")
   elif [ "$VERSION" == "$LATEST_PREVIEW" ]; then
-    PARAMETERS+=("--tag" "$NAME:latest-preview")
+    PARAMETERS+=("latest-preview")
   fi
   echo "${PARAMETERS[@]}"
 }
 
 for version in "${VERSIONS[@]}"; do
-  unset TAG_PARAMETERS
-  read -ra TAG_PARAMETERS < <(tags "$version")
-  $BUILDER image build \
-    --build-arg "VERSION=$version" \
-    "${TAG_PARAMETERS[@]}" \
-    .
+  unset IMAGES
+  read -ra IMAGES < <(tags "$version")
+  for image in "${IMAGES[@]}"; do
+    $BUILDER push "$NAME:$image"
+  done
   true
 done
