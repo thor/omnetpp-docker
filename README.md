@@ -4,8 +4,8 @@ Primarily for the purposes of my own master thesis, these containers aim to enab
 
 ## Tags
 
-- **`latest`** points to the latest stable, currently `5.6.1`.
-- **`latest-preview`** points to the latest preview, currently `6.0pre7`.
+- **`latest`** points to the latest stable, currently `5.6.2`.
+- **`latest-preview`** points to the latest preview, currently `6.0pre8`.
 
 - **`6`, `6.X`** point to the different versions of the preview release.
 - **`5`, `5.6`, `5.6.1`** point to the different versions of the preview release.
