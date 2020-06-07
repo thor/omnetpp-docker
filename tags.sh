@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # Tags used for builds
-LATEST_PREVIEW="6.0pre7"
-LATEST_STABLE="5.6.1"
+LATEST_PREVIEW="6.0pre8"
+LATEST_STABLE="5.6.2"
 
 BUILDER="docker"
 BUILD_PARAMETERS=()
